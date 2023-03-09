@@ -1,6 +1,9 @@
-﻿namespace Whisper.net.ModelLoader;
+﻿using System;
 
-internal interface IWhisperProcessorModelLoader : IDisposable
+namespace Whisper.net.ModelLoader
 {
-    public IntPtr LoadNativeContext();
+    internal interface IWhisperProcessorModelLoader : IDisposable
+    {
+        public IntPtr LoadNativeContext();
+    }
 }

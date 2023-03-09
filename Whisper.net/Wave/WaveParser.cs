@@ -1,6 +1,8 @@
-﻿namespace Whisper.net.Wave;
+﻿using System.IO;
 
-public sealed class WaveParser
+namespace Whisper.net.Wave
+{
+    public sealed class WaveParser
 {
     private readonly Stream waveStream;
     private readonly ushort channels;
@@ -164,4 +166,5 @@ public sealed class WaveParser
         }
         return reader;
     }
+}
 }

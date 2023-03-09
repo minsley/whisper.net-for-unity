@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Whisper.net;
-
-public interface IWhisperSamplingStrategyBuilder
+namespace Whisper.net
 {
-    /// <summary>
-    /// Returns the parent <seealso cref="WhisperProcessorBuilder"/>.
-    /// </summary>
-    WhisperProcessorBuilder ParentBuilder { get; }
+    public interface IWhisperSamplingStrategyBuilder
+    {
+        /// <summary>
+        /// Returns the parent <seealso cref="WhisperProcessorBuilder"/>.
+        /// </summary>
+        WhisperProcessorBuilder ParentBuilder { get; }
+    }
 }

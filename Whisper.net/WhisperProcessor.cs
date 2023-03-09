@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using Whisper.net.Native;
 using Whisper.net.SamplingStrategy;
 using Whisper.net.Wave;
@@ -62,48 +64,50 @@ namespace Whisper.net
             }
             whisperParams = newParams;
         }
-        public unsafe string? DetectLanguage(float[] samples, bool speedUp = false)
+        
+        public string? DetectLanguage(float[] samples, bool speedUp = false)
         {
             var (language, _) = DetectLanguageWithProbability(samples, speedUp);
             return language;
         }
         
-        public unsafe (string? language, float probability) DetectLanguageWithProbability(float[] samples, bool speedUp = false)
+        public (string? language, float probability) DetectLanguageWithProbability(float[] samples, bool speedUp = false)
         {
             var probs = new float[NativeMethods.whisper_lang_max_id()];
-
-            fixed (float* pData = probs)
+        
+            IntPtr unmanagedArray = Marshal.AllocHGlobal(samples.Length);
+            Marshal.Copy(samples, 0, unmanagedArray, samples.Length);
+            
+            if (speedUp)
             {
-                fixed (float* pSamples = samples)
-                {
-                    if (speedUp)
-                    {
-                        // whisper_pcm_to_mel_phase_vocoder is not yet exported from whisper.cpp
-                        NativeMethods.whisper_pcm_to_mel_phase_vocoder(currentWhisperContext, (IntPtr)pSamples, samples.Length, whisperParams.Threads);
-                    }
-                    else
-                    {
-                        NativeMethods.whisper_pcm_to_mel(currentWhisperContext, (IntPtr)pSamples, samples.Length, whisperParams.Threads);
-                    }
-                }
-                var langId = NativeMethods.whisper_lang_auto_detect(currentWhisperContext, 0, whisperParams.Threads, (IntPtr)pData);
-                if (langId == -1)
-                {
-                    return (null, 0f);
-                }
-                var languagePtr = NativeMethods.whisper_lang_str(langId);
-                var language = Marshal.PtrToStringAnsi(languagePtr);
-                return (language, probs[langId]);
+                // whisper_pcm_to_mel_phase_vocoder is not yet exported from whisper.cpp
+                NativeMethods.whisper_pcm_to_mel_phase_vocoder(currentWhisperContext, unmanagedArray, samples.Length, whisperParams.Threads);
             }
+            else
+            {
+                NativeMethods.whisper_pcm_to_mel(currentWhisperContext, unmanagedArray, samples.Length, whisperParams.Threads);
+            }
+        
+            IntPtr unmanagedArray2 = Marshal.AllocHGlobal(probs.Length);
+            Marshal.Copy(probs, 0, unmanagedArray2, probs.Length);
+                
+            var langId = NativeMethods.whisper_lang_auto_detect(currentWhisperContext, 0, whisperParams.Threads, unmanagedArray2);
+            if (langId == -1)
+            {
+                return (null, 0f);
+            }
+            var languagePtr = NativeMethods.whisper_lang_str(langId);
+            var language = Marshal.PtrToStringAnsi(languagePtr);
+            return (language, probs[langId]);
         }
         
-        public unsafe void Process(float[] samples)
+        public void Process(float[] samples)
         {
+            IntPtr unmanagedArray = Marshal.AllocHGlobal(samples.Length);
+            Marshal.Copy(samples, 0, unmanagedArray, samples.Length);
             segmentIndex = 0;
-            fixed (float* pData = samples)
-            {
-                NativeMethods.whisper_full(currentWhisperContext, whisperParams, (IntPtr)pData, samples.Length);
-            }
+            
+            NativeMethods.whisper_full(currentWhisperContext, whisperParams, unmanagedArray, samples.Length);
         }
 
 

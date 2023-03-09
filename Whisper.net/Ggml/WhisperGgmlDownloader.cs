@@ -1,4 +1,9 @@
-﻿namespace Whisper.net.Ggml
+﻿using System;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace Whisper.net.Ggml
 {
     public static class WhisperGgmlDownloader
     {

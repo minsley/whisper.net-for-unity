@@ -1,15 +1,18 @@
-﻿namespace Whisper.net.Wave;
+﻿using System;
 
-public class CorruptedWaveException : Exception
+namespace Whisper.net.Wave
 {
-    public CorruptedWaveException(string? message) : base(message)
+    public class CorruptedWaveException : Exception
     {
+        public CorruptedWaveException(string? message) : base(message)
+        {
+        }
     }
-}
 
-public class NotSupportedWaveException : Exception
-{
-    public NotSupportedWaveException(string? message) : base(message)
+    public class NotSupportedWaveException : Exception
     {
+        public NotSupportedWaveException(string? message) : base(message)
+        {
+        }
     }
 }

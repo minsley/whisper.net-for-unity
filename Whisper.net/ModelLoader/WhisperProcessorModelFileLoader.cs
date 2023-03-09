@@ -1,23 +1,25 @@
-﻿using Whisper.net.Native;
+﻿using System;
+using Whisper.net.Native;
 
-namespace Whisper.net.ModelLoader;
-
-internal sealed class WhisperProcessorModelFileLoader : IWhisperProcessorModelLoader
+namespace Whisper.net.ModelLoader
 {
-    private string pathModel;
-
-    public WhisperProcessorModelFileLoader(string pathModel)
+    internal sealed class WhisperProcessorModelFileLoader : IWhisperProcessorModelLoader
     {
-        this.pathModel = pathModel;
-    }
+        private string pathModel;
 
-    public void Dispose()
-    {
+        public WhisperProcessorModelFileLoader(string pathModel)
+        {
+            this.pathModel = pathModel;
+        }
 
-    }
+        public void Dispose()
+        {
 
-    public IntPtr LoadNativeContext()
-    {
-        return NativeMethods.whisper_init_from_file(pathModel);
+        }
+
+        public IntPtr LoadNativeContext()
+        {
+            return NativeMethods.whisper_init_from_file(pathModel);
+        }
     }
 }

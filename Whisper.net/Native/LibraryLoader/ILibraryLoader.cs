@@ -1,6 +1,9 @@
-﻿namespace Whisper.net.Native.LibraryLoader;
+﻿using System;
 
-internal interface ILibraryLoader
+namespace Whisper.net.Native.LibraryLoader
 {
-    IntPtr OpenLibrary(string filename, int flags);
+    internal interface ILibraryLoader
+    {
+        IntPtr OpenLibrary(string filename, int flags);
+    }
 }

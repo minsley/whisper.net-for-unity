@@ -1,8 +1,9 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
-namespace Whisper.net.Native;
-
-internal enum WhisperSamplingStrategy
+namespace Whisper.net.Native
+{
+    internal enum WhisperSamplingStrategy
 {
     StrategyGreedy,      // GreedyDecoder
     StrategyBeamSearch, // BeamSearchDecoder
@@ -143,4 +144,5 @@ internal struct WhisperFullParams
 [StructLayout(LayoutKind.Sequential)]
 internal struct WhisperContext
 {
+}
 }
